@@ -46,13 +46,14 @@ public class CreditPage extends BasePageObject{
     public void fillField(String fieldName, String value){
         switch (fieldName){
             case  "Цель кредита":
-                WebDriverWait wait = new WebDriverWait(BaseSteps.getDriver(), 3);
-                wait.until(ExpectedConditions.elementToBeClickable(targetSpan));
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                scrollToElement(targetSpan);
+                WebDriverWait wait = new WebDriverWait(BaseSteps.getDriver(), 3);
+                wait.until(ExpectedConditions.elementToBeClickable(targetSpan));
                 targetSpan.click();
                 wait.until(ExpectedConditions.visibilityOf(targetSelect));
                 WebElement select = targetSelect.findElement(By.xpath(".//div[contains(text(), '" + value + "')]"));
@@ -63,16 +64,14 @@ public class CreditPage extends BasePageObject{
                 fillField(estateCost, value);
                 break;
             case  "Первоначальный взнос":
+                WebDriverWait wait2 = new WebDriverWait(BaseSteps.getDriver(), 3);
+                wait2.until(ExpectedConditions.textToBe(By.xpath("//span[@data-test-id='amountOfCredit']"), "5 000 000 \u20BD"));
                 fillField(initialFee, value);
+                wait2.until(ExpectedConditions.textToBe(By.xpath("//span[@data-test-id='amountOfCredit']"), "3 000 000 \u20BD"));
+
                 break;
             case  "Срок кредита":
                 fillField(creditTerm, value);
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
                 break;
             default:  throw new AssertionError("Поле '"+fieldName+"' не объявлено на странице");
         }
