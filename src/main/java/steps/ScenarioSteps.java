@@ -44,4 +44,14 @@ public class ScenarioSteps {
             e.printStackTrace();
         }
     }
+    @Then("^значения полей равны:$")
+    public void checkFillForm(DataTable fields){
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        fields.asMap(String.class, String.class)
+                .forEach((field, value) -> creditPageSteps.checkFillField(field, value));
+    }
 }

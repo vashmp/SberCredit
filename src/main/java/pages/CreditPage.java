@@ -37,6 +37,18 @@ public class CreditPage extends BasePageObject{
     @FindBy(xpath="//div[@class='dcCalc_switch-desktop__description']")
     public WebElement checkbox;
 
+    @FindBy(xpath="//span[@data-test-id='amountOfCredit']")
+    public WebElement sumCredit;
+
+    @FindBy(xpath="//span[@data-test-id='monthlyPayment']")
+    public WebElement monthlyPayment;
+
+    @FindBy(xpath="//span[@data-test-id='rate']")
+    public WebElement rate;
+
+    @FindBy(xpath="//span[@data-test-id='requiredIncome']")
+    public WebElement requiredIncome;
+
     public void checkTitle(String title){
         ArrayList tabs2 = new ArrayList (BaseSteps.getDriver().getWindowHandles());
         BaseSteps.getDriver().switchTo().window(String.valueOf(tabs2.get(1)));
@@ -82,6 +94,20 @@ public class CreditPage extends BasePageObject{
         wait.until(ExpectedConditions.invisibilityOf(checkbox
                 .findElement(By.xpath("//div[contains(text(),'" + condition + "')]/../following-sibling::div//label/span[contains(@class, 'icon-on')]"))));
 
+    }
+
+    public String getFillField(String fieldName){
+        switch (fieldName){
+            case  "Сумма кредита":
+                return sumCredit.getText();
+            case  "Ежемесячный платеж":
+                return monthlyPayment.getText();
+            case  "Процентная ставка":
+                return rate.getText();
+            case  "Необходимый доход":
+                return requiredIncome.getText();
+        }
+        throw new AssertionError("Поле не объявлено на странице");
     }
 
 }
