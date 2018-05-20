@@ -2,10 +2,8 @@ package pages;
 
 import org.junit.Assert;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import steps.BaseSteps;
 
@@ -19,7 +17,7 @@ public class CreditPage extends BasePageObject{
     @FindBy(xpath="//h1")
     public WebElement header;
 
-    @FindBy(xpath="//div[@class='dcCalc_input-row-desktop__input']")
+    @FindBy(xpath="//*[contains(text(),'Цель кредита')]/..//label/..")
     public WebElement targetSpan;
 
     @FindBy(xpath="//div[@class='Select-menu-outer']")
@@ -52,8 +50,8 @@ public class CreditPage extends BasePageObject{
     public void checkTitle(String title){
         ArrayList tabs2 = new ArrayList (BaseSteps.getDriver().getWindowHandles());
         BaseSteps.getDriver().switchTo().window(String.valueOf(tabs2.get(1)));
-       // ((JavascriptExecutor) BaseSteps.getDriver()).executeScript("arguments[0].scrollIntoView(true);", header);
         Assert.assertEquals("Название", title , header.getText());
+        scrollToElement(topline);
     }
     public void fillField(String fieldName, String value){
         switch (fieldName){
@@ -64,13 +62,15 @@ public class CreditPage extends BasePageObject{
                     e.printStackTrace();
                 }
                 scrollToElement(targetSpan);
-                WebDriverWait wait = new WebDriverWait(BaseSteps.getDriver(), 3);
+                WebDriverWait wait = new WebDriverWait(BaseSteps.getDriver(), 30);
                 wait.until(ExpectedConditions.elementToBeClickable(targetSpan));
                 targetSpan.click();
                 wait.until(ExpectedConditions.visibilityOf(targetSelect));
                 WebElement select = targetSelect.findElement(By.xpath(".//div[contains(text(), '" + value + "')]"));
-                wait.until(ExpectedConditions.visibilityOf(select));
+                wait.until(ExpectedConditions.elementToBeClickable(select));
                 select.click();
+                WebElement input = BaseSteps.getDriver().findElement(By.xpath("//*[contains(text(),'Цель кредита')]/..//label/..//input"));
+                new WebDriverWait(BaseSteps.getDriver(), 5).until(ExpectedConditions.attributeContains(input, "value", value));
                 break;
             case  "Стоимость недвижимости":
                 fillField(estateCost, value);
